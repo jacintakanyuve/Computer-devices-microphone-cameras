@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Глаза и уши компьютера - 2 класс</title>
+    <style>
+        /* =========================================
+           ДЕТСКИЙ ЯРКИЙ ДИЗАЙН (СВЕТЛЫЙ GLASSMORPHISM)
+           ========================================= */
+        :root {
+            --bg-grad-1: #a1c4fd;
+            --bg-grad-2: #c2e9fb;
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.9);
+            --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --text-dark: #2d3748;
+            --color-mic: #ff9a9e;
+            --color-cam: #a18cd1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', 'Segoe UI', 'Comic Sans MS', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-grad-1), var(--bg-grad-2));
+            background-attachment: fixed;
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding: 20px 10px 80px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* Декоративные круги на фоне */
+        .bg-circle {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(60px);
+            z-index: -1;
+            opacity: 0.7;
+            animation: float 10s infinite alternate ease-in-out;
+        }
+        .circle-1 { width: 300px; height: 300px; background: #fad0c4; top: -50px; left: -50px; }
+        .circle-2 { width: 250px; height: 250px; background: #ffecd2; bottom: 10%; right: -50px; animation-delay: -3s; }
+
+        @keyframes float {
+            0% { transform: translateY(0px) scale(1); }
+            100% { transform: translateY(30px) scale(1.1); }
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            text-align: center;
+            color: #2b6cb0;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
+            line-height: 1.2;
+        }
+
+        /* Утилиты Glassmorphism */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 3px solid var(--glass-border);
+            border-radius: 25px;
+            box-shadow: var(--glass-shadow);
+        }
+
+        /* Кнопка озвучки */
+        .btn-speak {
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s, background 0.2s;
+            flex-shrink: 0;
+        }
+        .btn-speak:active, .btn-speak.playing {
+            transform: scale(0.9);
+            background: #d6bcfa;
+            border-color: #b794f4;
+        }
+
+        /* --- ИНТЕЛЛЕКТ-КАРТА --- */
+        .mindmap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+            gap: 20px;
+        }
+
+        .node-main {
+            padding: 20px;
+            text-align: center;
+            width: 90%;
+            background: rgba(255, 255, 255, 0.85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            border-color: #ffd700;
+        }
+        .node-main h2 {
+            font-size: 1.5rem;
+            color: #2c5282;
+        }
+        .node-main .emoji-big {
+            font-size: 3rem;
+        }
+
+        .branches-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 30px;
+        }
+        @media (min-width: 600px) {
+            .branches-container {
+                flex-direction: row;
+                align-items: flex-start;
+            }
+        }
+
+        .branch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 15px;
+        }
+
+        .node-category {
+            padding: 15px;
+            width: 90%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.6));
+        }
+        .node-category.mic { border-color: var(--color-mic); }
+        .node-category.cam { border-color: var(--color-cam); }
+        
+        .node-category h3 {
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sub-nodes {
+            display: flex;
+            flex-direction: column;
+            width: 85%;
+            gap: 10px;
+        }
+
+        .node-sub {
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            border: 2px solid white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        /* --- МИНИ-ИГРА --- */
+        .game-section {
+            margin-top: 40px;
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.7);
+        }
+        .game-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .game-header h2 {
+            font-size: 1.6rem;
+            color: #d69e2e;
+        }
+        
+        .question-card {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 20px;
+        }
+        .question-card.active {
+            display: flex;
+            animation: popIn 0.4s ease-out;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2a4365;
+        }
+
+        .answers {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .answer-btn {
+            background: white;
+            border: 3px solid #cbd5e1;
+            border-radius: 20px;
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+            flex: 1 1 120px;
+            max-width: 160px;
+        }
+        .answer-btn .emoji { font-size: 2.5rem; }
+        .answer-btn:active { transform: scale(0.95); }
+        .answer-btn.correct { background: #c6f6d5; border-color: #48bb78; }
+        .answer-btn.wrong { background: #fed7d7; border-color: #f56565; animation: shake 0.4s; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .feedback {
+            font-size: 1.2rem;
+            font-weight: bold;
+            height: 30px;
+            margin-top: 10px;
+        }
+        .feedback.success { color: #2f855a; }
+        .feedback.error { color: #c53030; }
+
+        /* Конфетти (генерируются через JS) */
+        .confetti {
+            position: fixed;
+            width: 15px;
+            height: 15px;
+            z-index: 1000;
+            pointer-events: none;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Декорации -->
+    <div class="bg-circle circle-1"></div>
+    <div class="bg-circle circle-2"></div>
+
+    <h1>Устройства компьютера:<br>Микрофон и Камера</h1>
+
+    <!-- ИНТЕЛЛЕКТ-КАРТА -->
+    <div class="mindmap">
+        <!-- Главный узел -->
+        <div class="node-main glass">
+            <div class="emoji-big">💻</div>
+            <h2>Глаза и уши компьютера</h2>
+            <button class="btn-speak" onclick="speak('Компьютеру, как и человеку, нужны глаза и уши. Это микрофон и камера!', this)">🔊</button>
+        </div>
+
+        <div class="branches-container">
+            <!-- ВЕТВЬ 1: Микрофон -->
+            <div class="branch">
+                <div class="node-category mic glass">
+                    <h3>🎤 Микрофон (Уши)</h3>
+                    <button class="btn-speak" onclick="speak('Микрофон — это уши компьютера. Он помогает компьютеру слышать звуки.', this)">🔊</button>
+                </div>
+                
+                <div class="sub-nodes">
+                    <div class="node-sub">
+                        <span>🗣️ Разговаривать с друзьями</span>
+                        <button class="btn-speak" onclick="speak('Разговаривать с друзьями по интернету', this)">🔊</button>
+                    </div>
+                    <div class="node-sub">
+                        <span>🎵 Записывать голос</span>
+                        <button class="btn-speak" onclick="speak('Записывать свой голос или песню', this)">🔊</button>
+                    </div>
+                    <div class="node-sub">
+                        <span>🔍 Голосовой поиск</span>
+                        <button class="btn-speak" onclick="speak('Искать мультики голосом без клавиатуры', this)">🔊</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ВЕТВЬ 2: Камера -->
+            <div class="branch">
+                <div class="node-category cam glass">
+                    <h3>📷 Камера (Глаза)</h3>
+                    <button class="btn-speak" onclick="speak('Камера — это глаза компьютера. Она помогает компьютеру видеть.', this)">🔊</button>
+                </div>
+                
+                <div class="sub-nodes">
+                    <div class="node-sub">
+                        <span>📸 Делать фотографии</span>
+                        <button class="btn-speak" onclick="speak('Делать красивые фотографии', this)">🔊</button>
+                    </div>
+                    <div class="node-sub">
+                        <span>🎥 Снимать видео</span>
+                        <button class="btn-speak" onclick="speak('Снимать веселые видеоролики', this)">🔊</button>
+                    </div>
+                    <div class="node-sub">
+                        <span>👨‍🏫 Видеть учителя</span>
+                        <button class="btn-speak" onclick="speak('Видеть учителя и одноклассников на онлайн-уроке', this)">🔊</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- МИНИ-ИГРА -->
+    <div class="game-section glass">
+        <div class="game-header">
+            <h2>🎮 Поиграем?</h2>
+            <p>Выбери правильную картинку!</p>
+        </div>
+
+        <div id="quiz-container">
+            <!-- Вопросы добавляются через JS -->
+        </div>
+    </div>
+
+    <script>
+        // --- 1. ОЗВУЧКА (Web Speech API) ---
+        const synth = window.speechSynthesis;
+        let activeBtn = null;
+
+        function speak(text, btnElement) {
+            // Если уже говорит - останавливаем
+            if (synth.speaking) {
+                synth.cancel();
+                if (activeBtn) activeBtn.classList.remove('playing');
+                if (activeBtn === btnElement) {
+                    activeBtn = null;
+                    return; // Если нажали на ту же кнопку, просто замолкаем
+                }
+            }
+
+            activeBtn = btnElement;
+            btnElement.classList.add('playing');
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ru-RU';
+            utterance.rate = 0.9; // Чуть медленнее для детей
+            utterance.pitch = 1.1; // Чуть выше голос
+
+            utterance.onend = () => {
+                btnElement.classList.remove('playing');
+                activeBtn = null;
+            };
+            
+            utterance.onerror = () => {
+                btnElement.classList.remove('playing');
+                activeBtn = null;
+            };
+
+            synth.speak(utterance);
+        }
+
+        // --- 2. МИНИ-ИГРА ---
+        const questions = [
+            {
+                q: "Какое устройство поможет тебе спеть песню для друга?",
+                options: [
+                    { text: "Микрофон", emoji: "🎤", correct: true },
+                    { text: "Камера", emoji: "📷", correct: false },
+                    { text: "Мышка", emoji: "🖱️", correct: false }
+                ],
+                success: "Ура! Микрофон запишет твой чудесный голос!",
+                fail: "Подумай ещё... Это устройство ловит звуки."
+            },
+            {
+                q: "С помощью чего мы можем сфотографировать своего кота?",
+                options: [
+                    { text: "Клавиатура", emoji: "⌨️", correct: false },
+                    { text: "Микрофон", emoji: "🎤", correct: false },
+                    { text: "Камера", emoji: "📷", correct: true }
+                ],
+                success: "Правильно! Камера сделает отличное фото!",
+                fail: "Ой, нет. Нам нужно устройство, которое умеет видеть."
+            },
+            {
+                q: "Если хочешь, чтобы бабушка увидела тебя по видеосвязи, что ты включишь?",
+                options: [
+                    { text: "Камеру", emoji: "📷", correct: true },
+                    { text: "Колонки", emoji: "🔊", correct: false },
+                    { text: "Микрофон", emoji: "🎤", correct: false }
+                ],
+                success: "Молодец! Бабушка будет рада тебя видеть!",
+                fail: "Не совсем. Колонки звучат, а бабушке нужно тебя увидеть."
+            }
+        ];
+
+        let currentQIndex = 0;
+        const quizContainer = document.getElementById('quiz-container');
+
+        function renderQuiz() {
+            quizContainer.innerHTML = '';
+            
+            questions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = `question-card ${index === currentQIndex ? 'active' : ''}`;
+                card.id = `q-${index}`;
+
+                const qText = document.createElement('div');
+                qText.className = 'question-text';
+                qText.innerHTML = `Вопрос ${index + 1} из ${questions.length}:<br><br>${q.q}`;
+                
+                // Кнопка озвучки вопроса
+                const speakQBtn = document.createElement('button');
+                speakQBtn.className = 'btn-speak';
+                speakQBtn.style.margin = '0 auto';
+                speakQBtn.innerHTML = '🔊';
+                speakQBtn.onclick = () => speak(q.q, speakQBtn);
+
+                const answersDiv = document.createElement('div');
+                answersDiv.className = 'answers';
+
+                const feedback = document.createElement('div');
+                feedback.className = 'feedback';
+                feedback.id = `feedback-${index}`;
+
+                q.options.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = 'answer-btn';
+                    btn.innerHTML = `<span class="emoji">${opt.emoji}</span><span>${opt.text}</span>`;
+                    
+                    btn.onclick = () => {
+                        // Очистка предыдущих стилей
+                        Array.from(answersDiv.children).forEach(b => {
+                            b.classList.remove('correct', 'wrong');
+                        });
+
+                        if (opt.correct) {
+                            btn.classList.add('correct');
+                            feedback.innerText = q.success;
+                            feedback.className = 'feedback success';
+                            speak(q.success, btn);
+                            createConfetti();
+                            
+                            // Переход к следующему вопросу через 3 секунды
+                            setTimeout(() => {
+                                if (currentQIndex < questions.length - 1) {
+                                    currentQIndex++;
+                                    renderQuiz(); // Перерисовываем для показа следующего
+                                } else {
+                                    showWinScreen();
+                                }
+                            }, 3500);
+
+                        } else {
+                            btn.classList.add('wrong');
+                            feedback.innerText = q.fail;
+                            feedback.className = 'feedback error';
+                            speak(q.fail, btn);
+                        }
+                    };
+                    answersDiv.appendChild(btn);
+                });
+
+                card.appendChild(qText);
+                card.appendChild(speakQBtn);
+                card.appendChild(answersDiv);
+                card.appendChild(feedback);
+                quizContainer.appendChild(card);
+            });
+        }
+
+        function showWinScreen() {
+            quizContainer.innerHTML = `
+                <div class="question-card active" style="gap:10px;">
+                    <div style="font-size: 4rem;">🎉🏆🎈</div>
+                    <div class="question-text" style="color: #2f855a; font-size: 1.5rem;">Ты супер молодец!</div>
+                    <p style="font-size: 1.1rem;">Ты знаешь всё про глаза и уши компьютера!</p>
+                    <button class="answer-btn" style="background:#fbd38d; border-color:#d69e2e; margin-top:20px;" onclick="currentQIndex=0; renderQuiz();">Играть снова</button>
+                </div>
+            `;
+            createConfetti(50);
+            speak('Ты супер молодец! Ты знаешь всё про глаза и уши компьютера!', document.body);
+        }
+
+        // --- 3. КОНФЕТТИ (САЛЮТ) ---
+        function createConfetti(amount = 30) {
+            const colors = ['#f56565', '#48bb78', '#4299e1', '#ed8936', '#9f7aea', '#ecc94b'];
+            for (let i = 0; i < amount; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                // Случайный цвет, позиция по X и длительность падения
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-20px';
+                
+                const duration = Math.random() * 2 + 2;
+                confetti.style.animationDuration = duration + 's';
+                
+                // Случайная форма (круг или квадрат)
+                if (Math.random() > 0.5) confetti.style.borderRadius = '50%';
+
+                document.body.appendChild(confetti);
+
+                // Удаляем элемент после анимации
+                setTimeout(() => {
+                    confetti.remove();
+                }, duration * 1000);
+            }
+        }
+
+        // Запуск
+        renderQuiz();
+
+    </script>
+</body>
+</html>
